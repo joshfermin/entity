@@ -1,9 +1,15 @@
 // sockets.js
+
 exports.socketServer = function (server) {
     var io = require('socket.io')(server);
-    io.on('connection', function(){
-        console.log('a user connected');
 
+    io.on('connection', function(socket){
+        socket.on('chat message', function(msg){
+            io.emit('chat message', msg);
+        });
+        socket.on('disconnect', function(){
+            console.log('user disconnected');
+        });
     });
     var chat = io
         .of('/chat')
