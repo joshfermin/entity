@@ -22,9 +22,17 @@
 </html>
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="/javascripts/socket.io-stream.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
     var socket = io();
+    var stream = ss.createStream();
+
+
+    ss(socket).emit('file', stream);
+    stream.pipe(fs.createWriteStream('file.txt'));
+
+
     $('form').submit(function(){
         socket.emit('chat message', $('#m').val());
         $('#m').val('');
