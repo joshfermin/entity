@@ -1,7 +1,10 @@
 // sockets.js
-exports.socketServer = function (app) {
-    var io = require('socket.io')(app);
+exports.socketServer = function (server) {
+    var io = require('socket.io')(server);
+    io.on('connection', function(){
+        console.log('a user connected');
 
+    });
     var chat = io
         .of('/chat')
         .on('connection', function (socket) {

@@ -1,49 +1,30 @@
-var express = require('express');
-var fs = require('fs');
-var lame = require('lame');
-var Speaker = require('speaker');
-//
-// var encoder = lame.Encoder({
-//     channels: 2,
-//     bitDepth: 16,
-//     sampleRate: 44100
-// });
-//
-// encoder.on("data", function(data) {
-//     sendData(data);
-// });
-//
-// var decoder = lame.Decoder();
-// decoder.on('format', function(format){
-//     decoder.pipe(encoder);
-// });
+var path = require('path');
 
 module.exports = function(app) {
-  app.get('/sound', function(req,res){
-      var filePath = '/Users/joshfermin/IdeaProjects/sound/server/mp3/cliffs.mp3';
-      var stat = fs.statSync(filePath);
+    app.get('/', function(req, res){
+        res.sendFile(path.join(__dirname, '../views', 'index.html'));
+    });
 
-      // res.writeHead(200, {
-      //     'Content-Type': 'audio/mpeg',
-      //     'Content-Length': stat.length
-      // });
+    // catch 404 and forward to error handler
+    app.use(function(req, res, next) {
+        var err = new Error('Not Found');
+        err.status = 404;
+        next(err);
+    });
 
-      var readStream = fs.createReadStream(filePath);
-      readStream.pipe(new lame.Decoder)
-          .on('format', console.log)
-          .pipe(new Speaker);
-  });
+    // error handlers
+
+    // development error handler
+    // will print stacktrace
+    if (app.get('env') === 'development') {
+        app.use(function(err, reqa, res, next) {
+            res.status(err.status || 500);
+        });
+    }
+
+    // production error handler
+    // no stacktraces leaked to user
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+    });
 };
-
-// var filePath = 'path_to_file.mp3';
-// var stat = fileSystem.statSync(filePath);
-//
-// response.writeHead(200, {
-//     'Content-Type': 'audio/mpeg',
-//     'Content-Length': stat.size
-// });
-//
-// var readStream = fileSystem.createReadStream(filePath);
-// // We replaced all the event handlers with a simple call to util.pump()
-// util.pump(readStream, response);
-
